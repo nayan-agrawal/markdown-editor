@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import ReactMarkdown from 'react-markdown'
-import SyntaxHighlighter from 'react-syntax-highlighter'
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import axios from 'axios';
+import MarkdownEditor from './editor/editor';
+import 'github-markdown-css/github-markdown.css'
 
 export default function LiveMarkdown() {
     const [markdownInput, setMarkdownInput] = useState();
@@ -24,32 +22,14 @@ export default function LiveMarkdown() {
     return (
         <div className="App">
             <div className="wrapper">
-                <div className="head">
-                    <VisibilityIcon />
-                    MARKDOWN
-                </div>
-                <textarea
-                    autoFocus
-                    className="textarea"
+                <MarkdownEditor
                     value={markdownInput}
-                    onChange={(e) => setMarkdownInput(e.target.value)}
-                ></textarea>
+                    handleEditorChange={(value, e) => setMarkdownInput(value)}
+                />
             </div>
             <div className="wrapper">
-                <div className="head">
-                    <VisibilityIcon />
-                    PREIVEW
-                </div>
-                <div dangerouslySetInnerHTML={{ __html: convertedMarkdown }} />
+                <div className='markdown-body' dangerouslySetInnerHTML={{ __html: convertedMarkdown }} />
             </div>
         </div>
-    )
-}
-
-const MarkComponent = ({ value, language }) => {
-    return (
-        <SyntaxHighlighter language={language ?? null} style={docco}>
-            {value ?? ''}
-        </SyntaxHighlighter>
     )
 }
