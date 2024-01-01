@@ -1,23 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import MarkdownEditor from './editor/editor';
+import useDebounce from '../hooks/useDebounce'
 import 'github-markdown-css/github-markdown.css'
 
 export default function LiveMarkdown() {
     const [markdownInput, setMarkdownInput] = useState();
     const [convertedMarkdown, setConvertedMarkdown] = useState('');
 
+    const markdownInputValue = useDebounce(markdownInput, 1000);
+
     useEffect(() => {
         (async () => {
-            if (markdownInput?.length === 0) return;
+            if (markdownInputValue?.length === 0) return;
             try {
-                const response = await axios.post('http://localhost:5000/convert', { data: markdownInput });
+                const response = await axios.post('http://localhost:5000/convert', { data: markdownInputValue });
                 setConvertedMarkdown(response.data.result);
             } catch (error) {
                 console.error('Error converting Markdown:', error);
             }
         })();
-    }, [markdownInput]);
+    }, [markdownInputValue]);
 
     return (
         <div className="App">
